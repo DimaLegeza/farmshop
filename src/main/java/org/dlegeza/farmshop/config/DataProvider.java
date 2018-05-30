@@ -1,24 +1,20 @@
 package org.dlegeza.farmshop.config;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
+import lombok.RequiredArgsConstructor;
 import org.dlegeza.farmshop.entities.Farm;
-import org.dlegeza.farmshop.services.FarmService;
-import org.dlegeza.farmshop.services.StockService;
+import org.dlegeza.farmshop.services.ReconfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
+import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 @Component
 @ConditionalOnProperty(name = "app.init-data.enabled", havingValue = "true")
@@ -26,8 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class DataProvider {
 	private static final String INIT_DATA = "init/farm.xml";
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataProvider.class);
-	private final FarmService farmService;
-	private final StockService stockService;
+	private final ReconfigurationService reconfigurationService;
 
 	@PostConstruct
 	public void postConstruct() {
@@ -36,8 +31,7 @@ public class DataProvider {
 			InputStream resourceAsStream = DataProvider.class.getClassLoader().getResourceAsStream(INIT_DATA);
 			String xml = inputStreamToString(resourceAsStream);
 			final Farm farm = xmlMapper.readValue(xml, Farm.class);
-			farmService.setFarm(farm);
-			stockService.defineStock();
+			this.reconfigurationService.constructNewFarm(farm);
 			LOGGER.info("Setup was successful");
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());

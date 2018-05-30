@@ -1,10 +1,9 @@
 package org.dlegeza.farmshop.entities.animals;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
-import org.dlegeza.farmshop.entities.enums.Sex;
-
 import lombok.NoArgsConstructor;
+import org.dlegeza.farmshop.entities.enums.Sex;
 
 /**
  * 	Can be male/female
@@ -12,16 +11,19 @@ import lombok.NoArgsConstructor;
  * 	Only female can produce milk
  * 	All female can produce 50 liters of milk
  */
-@JacksonXmlRootElement(localName = "goat")
+@JacksonXmlRootElement(localName = Goat.ANIMAL_TYPE)
 @NoArgsConstructor
 public class Goat extends FarmAnimal {
+	public static final String ANIMAL_TYPE = "goat";
 
-	public Goat(String name, Sex sex, int wool) {
-		super(name, sex, wool);
-	}
-
-	public int milkAmount() {
-		return Sex.F.equals(this.sex) ? 50 : 0;
+	public Goat(
+			@JacksonXmlProperty(localName = "name", isAttribute = true)
+			String name,
+			@JacksonXmlProperty(localName = "sex", isAttribute = true)
+			Sex sex,
+			@JacksonXmlProperty(localName = "wool", isAttribute = true)
+			int wool) {
+		super(name, sex, wool, Goat.ANIMAL_TYPE, Sex.F.equals(sex) ? 50 : 0);
 	}
 
 }
