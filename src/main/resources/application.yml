@@ -1,3 +1,4 @@
 app:
   init-data:
+    # is creation of initial data enabled
     enabled: true
