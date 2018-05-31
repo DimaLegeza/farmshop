@@ -1,6 +1,5 @@
 package org.dlegeza.farmshop.services;
 
-import lombok.RequiredArgsConstructor;
 import org.dlegeza.farmshop.dto.OrderDTO;
 import org.dlegeza.farmshop.dto.OrderDetailsDTO;
 import org.dlegeza.farmshop.entities.Farm;
@@ -9,6 +8,8 @@ import org.dlegeza.farmshop.entities.animals.FarmAnimal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -37,15 +38,6 @@ public class StockService {
 	}
 
 	/**
-	 *
-	 * @param details - order details of the customer {@link OrderDetailsDTO}
-	 * @return boolean value that represents if amount of wool and milk is enough to process the request
-	 */
-	public boolean isEnoughInStock(OrderDetailsDTO details) {
-		return this.stock.getMilk() >= details.getMilk() && this.stock.getWool() >= details.getWool();
-	}
-
-	/**
 	 * In case of sufficient amount of resources order is processed and stock amounts decreased
 	 * @param order - order details of the customer {@link OrderDTO}
 	 */
@@ -60,6 +52,15 @@ public class StockService {
 		);
 		LOGGER.warn("order processed: {}", order);
 		return order;
+	}
+
+	/**
+	 *
+	 * @param details - order details of the customer {@link OrderDetailsDTO}
+	 * @return boolean value that represents if amount of wool and milk is enough to process the request
+	 */
+	private boolean isEnoughInStock(OrderDetailsDTO details) {
+		return this.stock.getMilk() >= details.getMilk() && this.stock.getWool() >= details.getWool();
 	}
 
 	private Stock stockBuilder(int milk, int wool) {

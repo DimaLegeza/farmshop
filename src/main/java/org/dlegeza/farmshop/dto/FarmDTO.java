@@ -20,7 +20,9 @@ public class FarmDTO {
 		if (this.flock == null) {
 			this.flock = new ArrayList<>();
 		}
-		this.flock.addAll(animal);
+		if (animal != null) {
+			this.flock.addAll(animal);
+		}
 		return this;
 	}
 }
